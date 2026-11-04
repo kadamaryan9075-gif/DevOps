@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python DevOps To-Do App</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 680px; margin: 40px auto;
+               padding: 0 18px; background: #f4f6f8; color: #202938; }
+        main { background: white; padding: 26px; border-radius: 12px;
+               box-shadow: 0 3px 14px #00000012; }
+        h1 { margin-top: 0; }
+        form.add { display: flex; gap: 8px; }
+        input { flex: 1; padding: 11px; border: 1px solid #ccd2da; border-radius: 6px; }
+        button { padding: 9px 12px; border: 0; border-radius: 6px;
+                 background: #2457c5; color: white; cursor: pointer; }
+        li { display: flex; justify-content: space-between; align-items: center;
+             gap: 10px; padding: 12px 0; border-bottom: 1px solid #edf0f3; }
+        li span { flex: 1; }
+        .done { text-decoration: line-through; color: #788391; }
+        .actions { display: flex; gap: 6px; }
+        .delete { background: #b83232; }
+    </style>
+</head>
+<body>
+<main>
+    <h1>My To-Do List</h1>
+    <p>A simple Python Flask project with GitHub Actions CI.</p>
+    <form class="add" action="{{ url_for('add_task') }}" method="post">
+        <input name="title" placeholder="Enter a task..." required>
+        <button type="submit">Add</button>
+    </form>
+    {% if tasks %}
+    <ul>
+        {% for task in tasks %}
+        <li>
+            <span class="{{ 'done' if task.done else '' }}">{{ task.title }}</span>
+            <div class="actions">
+                <form action="{{ url_for('complete_task', task_id=task.id) }}" method="post">
+                    <button type="submit">{{ 'Undo' if task.done else 'Done' }}</button>
+                </form>
+                <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post">
+                    <button class="delete" type="submit">Delete</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No tasks yet. Add your first task above.</p>
+    {% endif %}
+</main>
+</body>
+</html>
